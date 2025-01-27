@@ -15,7 +15,9 @@ function MyApp() {
 
   function updateList(person) {
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+      .then((newUser) => {
+        setCharacters([...characters, newUser]);
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -49,6 +51,12 @@ function MyApp() {
         "Content-type": "application/json",
       },
       body: JSON.stringify(person),
+    }).then((res) => {
+      if (res.status === 201) {
+        return res.json();
+      } else {
+        throw new Error("Failed to create user");
+      }
     });
     return promise;
   }
