@@ -84,14 +84,19 @@ app.get("/users/:id", (req, res) => {
 });
 
 const addUser = (user) => {
+  user.id = generateId();
   users["users_list"].push(user);
   return user;
 };
 
 app.post("/users", (req, res) => {
-  const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  const { name, job } = req.body;
+  if (!name || typeof name !== "string" || !job || typeof job !== "string") {
+    res.status(409).send();
+    return;
+  }
+  const newUser = addUser(req.body);
+  res.status(201).send(newUser);
 });
 
 app.delete("/users/:id", (req, res) => {
@@ -106,3 +111,7 @@ app.delete("/users/:id", (req, res) => {
     res.send();
   }
 });
+
+const generateId = () => {
+  return Math.random().toString(32).substring(2, 10); // generating random
+};
