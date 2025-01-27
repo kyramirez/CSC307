@@ -14,7 +14,11 @@ function MyApp() {
   }
 
   function updateList(person) {
-    setCharacters([...characters, person]);
+    postUser(person)
+      .then(() => setCharacters([...characters, person]))
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   return (
@@ -37,6 +41,17 @@ function MyApp() {
         console.log(error);
       });
   }, []);
+
+  function postUser(person) {
+    const promise = fetch("Http://localhost:8000/users", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(person),
+    });
+    return promise;
+  }
 }
 
 export default MyApp;
